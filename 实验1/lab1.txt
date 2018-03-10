@@ -35,7 +35,7 @@
 具有个人风格的C++源程序：
 
 Test-in.cpp
-```c++
+```c
 #include<iostream.h>
 (* This is a test file *)
 main()
@@ -51,7 +51,7 @@ end
 
 改写后的C++源程序：
 Test-out.cpp
-```c++
+```c
 #include<iostream.h>
 /* This is a test file */
 main()
