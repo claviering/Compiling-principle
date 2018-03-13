@@ -7,8 +7,7 @@ using namespace std;
 class Precompiled
 {
 public:
-public:
-	Precompiled();
+	Precompiled(FILE *p_in, FILE *p_out);
 	~Precompiled();
 	void run();
 private:
@@ -17,11 +16,28 @@ private:
 	char c;
 	map<string, string> change_map;
 
-	void open_file();
+	void init_map();
 	void process();
 };
 
-Precompiled::Precompiled()
+Precompiled::Precompiled(FILE *p_in, FILE *p_out)
+{
+	if (p_in == NULL)
+		perror("Error opening file");
+	if (p_out == NULL)
+		perror("Error opening file");
+	p_in_file = p_in;
+	p_out_file = p_out;
+
+	init_map();
+}
+
+Precompiled::~Precompiled()
+{
+	fclose(p_in_file);
+}
+
+void Precompiled::init_map()
 {
 	change_map["begin"] = "{";
 	change_map["end"] = "}";
@@ -32,33 +48,14 @@ Precompiled::Precompiled()
 	change_map[":="] = "=";
 	change_map["<>"] = "!=";
 	change_map["write"] = "cout";
-}
 
-
-Precompiled::~Precompiled()
-{
-	fclose(p_in_file);
 }
 
 void Precompiled::run()
 {
-	open_file();
-}
-
-void Precompiled::open_file()
-{
-	FILE *stream;
-	p_in_file = fopen("Test_in.cpp", "r");
-	if (p_in_file == NULL) 
-		perror("Error opening file");
-
-	p_out_file = fopen("Test_out.cpp", "w");
-	if (p_out_file == NULL)
-		perror("Error opening file");
-
-
 	process();
 }
+
 
 void Precompiled::process()
 {
@@ -91,7 +88,9 @@ void Precompiled::process()
 
 int main()
 {
-	Precompiled obj;
+	FILE *p_in = fopen("Test_in.cpp", "r");
+	FILE *p_out = fopen("Test_out.cpp", "w");
+	Precompiled obj(p_in, p_out);
 	obj.run();
 	cout << "ok" << endl;
 	return 0;
