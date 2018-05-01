@@ -1,0 +1,24 @@
+\documentclass[]{article}
+\usepackage{ctex}
+
+%opening
+\title{实验1：预编译系统的实现----打造具有个人风格的C++语言（词法分析）}
+\author{20152100121 林伟业}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+\section{功能}
+实现具有个人风格C++源代码的预编译系统，即扫描程序把具有个人风格的单词重新改写为传统C++单词
+
+\section{思路}
+
+使用 fgetc 一个字符一个字符的读进程序，关键词使用\$符号包含，当读到\$字符时，将后面继续读到的符号保存起来，知道下一个\$符号被读到。将\$符号包括的关键词组合成一个string类型，使用map函数映射为C语言对应的关键词，最后写入文件。
+
+\section{代码}
+
+代码详细看 test.cpp
+\end{document}
