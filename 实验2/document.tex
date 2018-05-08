@@ -28,17 +28,17 @@
 
 \section{程序说明}
 
-实验使用编程语言：Python。主要文件NFA.py、DFA.py。程序运行：python DFA.py -s $"(a|b)^*abb"$。程序输出NFA，DFA，最小化的DFA，词法分析程序。
+实验使用编程语言：Python。主要文件NFA.py、DFA.py。程序运行：python DFA.py -s $"(a|b)^*abb"$ -p program-file。程序输出NFA，DFA，最小化的DFA，词法分析程序(未完成)。
 
 \section{类和函数说明}
-NFA.py 文件
-\subsection{类Condition}
+\subsection{NFA.py 文件} 
+\subsubsection*{类Condition}
 保存NFA一个节点开始和结束状态的类
 
-\subsection{类Node}
+\subsubsection*{类Node}
 保存一个NFA机器的类，包含有开始结束状态和转移字符
 
-\subsection{类Reg\_To\_NFA}
+\subsubsection*{类Reg\_To\_NFA}
 实现正则表达式转NFA。
 
 思路：对正则表达式做开始前的处理，加入\&连接运算符，把读到的一个字符a到z，作为一个NFA机器添加到队列里，读取到的运算符保存到opt\_list队列里，运算符队列不为空的时候，取出运算符做相应的操作。连接运算符：在NFA机器队列里拿出2个，合并为一台机器后再加入到NFA的队列。闭包运算符：在状态队列里保存着最新添加到NFA队列里机器的开始和结束状态，读取到闭包运算符就从状态队列里拿出最新的2个状态，做闭包运算。或运算：在NFA队列里拿出两太机器，加入新的开始和结束状态，还有4条边，把合并后的机器重新加入和NFA队列。括号运算：把括号里的表达式拿出来，递归处理。
@@ -54,12 +54,12 @@ NFA.py 文件
 	\item   def get\_one\_char(self)  获取正则表达式的一个字符，并返回
 	\item   def to\_NFA(self, string)  主要函数，正则表达式转NFA
 \end{enumerate}
-DFA.py 文件
+\subsection{DFA.py 文件}
 
-\subsection{类Node}
+\subsubsection*{类Node}
 保存DFA机器状态，有开始，结束状态和转移字符
 
-\subsection{类NFA\_To\_DFA}
+\subsubsection*{类NFA\_To\_DFA}
 实现NFA转DFA。
 实现思路：将保存NFA机器的列表转变存储结构，方便DFA的状态转移遍厉。使用2个列表start\_map和end\_map。0->a->1，保存为 start\_map[0]=a,end\_map[0]=1,2->b->3,保存为start\_map[2]=b,end\_map[2]=3，如此类推。首先是找到包含开始状态和经过*转换的所有状态，作为DFA的第一个状态A。从A出发遍厉正则表达式的字母表，转换出其他状态BCD...
 
@@ -86,6 +86,12 @@ DFA.py 文件
 \begin{figure}[h]
 	\centering
 	\includegraphics[width = 0.8\textwidth]{2.PNG}
+	\caption{DFA}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{3.PNG}
 	\caption{DFA}
 \end{figure}
 \end{document}

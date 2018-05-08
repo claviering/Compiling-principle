@@ -21,9 +21,13 @@ class NFA_To_DFA:
         self.alp = []  # 字符表
         self.start_map = []
         self.end_map = []  
-        self.NFA_condition = []  # 保存机器的开始，结束状态
+        self.NFA_condition = []  # 保存NFA机器的开始，结束状态
+        self.DFA_condition = []  # 保存DFA机器的开始，结束状态
         self.condition_set = []  # 保存状态集合的列表[[],[],[]...]
-        self.DFA_list = []  # 保存DFA
+        self.DFA_list = []  # 保存DFA，元素是一个对象
+        self.repe_list= []  # 保存DFA转移表，包括重复的，元素是一个对象
+        self.map_condition = {}  # 状态集合映射为一个数字
+        self.return_min_DFA_list = []  # 转换程序时候用，保存内容[[0a1], [1b2]]，第1个保存开始状态，第2个保存结束状态
 
         self.pre_oper()
         self.get_alp_from_string()
@@ -78,19 +82,43 @@ class NFA_To_DFA:
 
     # 添加一个DFA到列表
     # @param start 开始状态的
+    # @param ch 转移字符
+    # @param end 结束状态的
     def add_DFA_list(self, start, ch, end):
         tmp = Node(start, ch, end)
         self.DFA_list.append(tmp)
 
+    # 添加一个NFA到列表，包括重复的
+    # @param start 开始状态的
+    # @param ch 转移字符
+    # @param end 结束状态的
+    def add_repe_list(self, start, ch, end):
+        tmp = Node(start, ch, end)
+        self.repe_list.append(tmp)
+
     #输出DFA
     def print_DFA(self):
-        print ("DFA:")
+        print ("min DFA:")
+        print ("DFA start condition is ") + str(self.DFA_condition[0])
+        print ("DFA end condition is ") + str(self.DFA_condition[1])
+        self.return_min_DFA_list.append(str(self.DFA_condition[0]))
+        self.return_min_DFA_list.append(str(self.DFA_condition[1]))
         for i in self.DFA_list:
+            p = str((self.map_condition[tuple(i.start_condition_list)])) + (i.ch) + str((self.map_condition[tuple(i.end_condition_list)]))
+            self.return_min_DFA_list.append(p)
+            s = str((self.map_condition[tuple(i.start_condition_list)])) + ("->" + i.ch + "->") + str((self.map_condition[tuple(i.end_condition_list)]))
+            print s 
+            print ("--------------------")
+            
+    # 输出重复的DFA
+    def print_repe_DFA(self):
+        print ("repe DFA:")
+        for i in self.repe_list:
             print (i.start_condition_list)
             print ("->" + i.ch + "->")
             print (i.end_condition_list)
             print ("--------------------")
-            
+
 
     # Dstates 子集构造法
     def make_condition_set(self):
@@ -121,12 +149,32 @@ class NFA_To_DFA:
                         break
                     else:
                         all_ok = tmp
+                self.add_repe_list(Dstates[mark], c, tmp)
                 if tmp not in Dstates and len(tmp) > 0:
                     Dstates.append(tmp)
                     self.add_DFA_list(Dstates[mark], c, tmp)
             mark += 1
 
         self.condition_set = Dstates
+
+    # 最小化DFA
+    def min_DFA(self):
+        n = 0
+        self.DFA_condition.append(n)
+        for i in self.condition_set:
+            self.map_condition[tuple(i)] = n
+            n = n + 1
+        self.DFA_condition.append(n-1)
+
+# 外部调用接口
+def DFA(string):
+    a = NFA_To_DFA(string)
+    a.make_condition_set()
+    a.min_DFA()
+    a.print_repe_DFA()
+    a.print_DFA()
+    return a.return_min_DFA_list
+
 
 def main(argv):
     st = ""
@@ -141,8 +189,13 @@ def main(argv):
             sys.exit()
         elif opt in ("-s", "--st"):
             st = arg
+    if st == "":
+        print ("DFA.py -s \"string\"")
+        sys.exit(2)
     b = NFA_To_DFA(st)
     b.make_condition_set()
+    b.min_DFA()
+    b.print_repe_DFA()
     b.print_DFA()
 
 if __name__ == "__main__":
