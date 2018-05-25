@@ -1,0 +1,93 @@
+                             实验三：TINY扩充语言的语法分析
+
+
+一、实验内容：
+
+扩充的语法规则有：实现 while、do while、for语句、大于>比较运算符号以及求余计算式子，具体文法规则自行构造。
+可参考：P97及P136的文法规则。
+
+(1) While-stmt --> while  exp  do  stmt-sequence  endwhile
+(2) Dowhile-stmt-->do  stmt-sequence  while(exp); 
+(3) for-stmt-->for identifier:=simple-exp  to  simple-exp  do  stmt-sequence enddo    步长递增1
+(4) for-stmt-->for identifier:=simple-exp  downto  simple-exp  do  stmt-sequence enddo    步长递减1
+(5) 大于>比较运算符号以及求余计算式子的文法规则请自行组织。
+(6) 把TINY语言原有的if语句书写格式
+
+    if_stmt-->if exp then stmt-sequence end  |  | if exp then stmt-sequence else stmt-sequence end 
+
+改写为：
+
+    if_stmt-->if(exp) stmt-sequence else stmt-sequence | if(exp) stmt-sequence
+      
+
+二、要求：
+ （1）要提供一个源程序编辑界面，以让用户输入源程序（可保存、打开源程序）
+ （2）可由用户选择是否生成语法树，并可查看所生成的语法树。
+ （3）应该书写完善的软件文档
+
+三、完成时间：四周
+
+四、上交方法：
+    由各班班长或学习委员将每个同学的实验源程序、可执行程序、文档刻录成光盘。
+
+
+五、完成方式：每个学生自行独立完成。
+
+
+六、测试数据
+
+测试文件1：
+
+{ Sample program
+  in TINY language -
+  computes factorial
+}
+read x; { input an integer }
+if (x>0) { don't compute if x <= 0 }
+  fact := 1;
+  do
+    fact := fact * x;
+    x := x - 1
+  while(x>0);
+  write fact;  { output factorial of x }
+
+
+
+
+
+测试文件2：
+
+
+{ Sample program
+  in TINY language -
+  computes factorial
+}
+read x; { input an integer }
+if(x>0) { don't compute if x <= 0 }
+  for  fact := x downto 1 do 
+    fact := fact * x;
+  enddo
+  write fact;  { output factorial of x }
+
+
+
+
+测试文件3：
+
+
+{ Sample program
+  in TINY language -
+  computes factorial
+}
+read x; { input an integer }
+if ( x>0 ) { don't compute if x <= 0 }
+  fact := 1;
+  while x>0 do 
+    fact := fact * x;
+    x := x - 1
+  endwhile
+  write fact;  { output factorial of x }
+
+
+
+
